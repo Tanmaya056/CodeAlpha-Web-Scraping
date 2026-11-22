@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Book Data Scraper | CodeAlpha</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="top"><div class="wrap"><span class="eyebrow">CODEALPHA · WEB SCRAPING PROJECT</span><h1>Book Data Scraper</h1><p>Collect structured book information from a public practice website.</p></div></header>
+<main class="wrap">
+  <section class="panel intro">
+    <div><span class="tag">LIVE WEB SCRAPER</span><h2>Explore book catalogue data</h2><p>Choose how many catalogue pages to collect. The scraper extracts each book's title, price, rating, availability and product link.</p></div>
+    <form action="/scrape" method="post" class="controls">
+      <label for="pages">Catalogue pages</label>
+      <select id="pages" name="pages"><option value="1">1 page</option><option value="2">2 pages</option><option value="3" selected>3 pages</option><option value="4">4 pages</option><option value="5">5 pages</option></select>
+      <button type="submit">Start Scraping ↗</button>
+      <small>Uses Books to Scrape, a website built for scraping practice.</small>
+    </form>
+  </section>
+  {% if message %}<div class="notice success">{{ message }}</div>{% endif %}
+  {% if error %}<div class="notice error">{{ error }}</div>{% endif %}
+  <section class="stats">
+    <div class="stat"><span>BOOKS COLLECTED</span><strong>{{ books|length }}</strong></div>
+    <div class="stat"><span>DATA FIELDS</span><strong>5</strong></div>
+    <div class="stat"><span>SOURCE</span><strong>Books to Scrape</strong></div>
+  </section>
+  <section class="panel">
+    <div class="section-head"><div><span class="eyebrow dark">SCRAPED RESULTS</span><h2>Collected book records</h2></div>
+      {% if books %}<a class="download" href="/download">↓ Download CSV</a>{% endif %}
+    </div>
+    {% if books %}
+    <div class="table-scroll"><table><thead><tr><th>#</th><th>Book title</th><th>Price</th><th>Rating</th><th>Availability</th><th>Product</th></tr></thead><tbody>
+    {% for b in books %}<tr><td>{{ loop.index }}</td><td class="book">{{ b.title }}</td><td>{{ b.price }}</td><td>{{ b.rating }}/5</td><td>{{ b.availability }}</td><td><a href="{{ b.product_url }}" target="_blank" rel="noopener">View ↗</a></td></tr>{% endfor %}
+    </tbody></table></div>
+    {% else %}<div class="empty"><div class="empty-icon">⌕</div><h3>No records yet</h3><p>Choose the number of pages and click <b>Start Scraping</b> to collect live data.</p></div>{% endif %}
+  </section>
+  <section class="how"><h2>How it works</h2><div class="steps"><div><b>01</b><h3>Request</h3><p>Python requests the public catalogue page.</p></div><div><b>02</b><h3>Extract</h3><p>BeautifulSoup parses HTML and extracts book details.</p></div><div><b>03</b><h3>Export</h3><p>Records are displayed and can be downloaded as CSV.</p></div></div></section>
+  <footer>Built for CodeAlpha Web Scraping Task · Educational use</footer>
+</main>
+</body></html>
